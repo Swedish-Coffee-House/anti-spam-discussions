@@ -1,0 +1,19 @@
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.iml
+
+# Test outputs
+test-results/
+*.log
