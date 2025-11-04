@@ -10,8 +10,8 @@ This repository provides an automated spam detection system for GitHub Discussio
 
 - **Automatic Detection**: Analyzes new discussions when they are created
 - **AI-Powered**: Uses OpenAI's GPT-4o-mini model via GitHub Models
-- **Non-Destructive**: Adds comments to suspected spam discussions rather than deleting them
-- **Transparent**: Includes explanation in comments allowing for appeals
+- **Non-Destructive**: Minimizes (hides) suspected spam discussions rather than deleting them
+- **Transparent**: Spam discussions are marked as "spam" and can be reviewed by maintainers
 - **Customizable**: Easy to adjust spam detection criteria
 
 ## How It Works
@@ -21,8 +21,8 @@ When a new discussion is created in your repository:
 1. The GitHub Actions workflow is triggered
 2. The discussion title and body are extracted
 3. An AI model analyzes the content using predefined spam indicators
-4. If spam is detected, a comment is added to the discussion explaining the situation
-5. Repository maintainers can review and take appropriate action
+4. If spam is detected, the discussion is minimized (hidden) and marked as spam
+5. Repository maintainers can review minimized discussions and un-minimize if needed
 
 ## Spam Detection Criteria
 
@@ -56,7 +56,7 @@ The spam detection behavior can be customized by editing:
 
 - **System Prompt**: `.github/workflows/scripts/spam-detection/generate-sys-prompt.sh` - Modify spam detection criteria
 - **AI Model**: `.github/workflows/scripts/spam-detection/check-discussion-prompts.yml` - Change the AI model
-- **Comment Message**: `.github/workflows/scripts/spam-detection/process-discussion.sh` - Customize the message posted to spam discussions
+- **Spam Classifier**: `.github/workflows/scripts/spam-detection/process-discussion.sh` - Change the classifier used when minimizing (SPAM, OUTDATED, OFF_TOPIC, etc.)
 
 ## Testing
 
@@ -86,7 +86,7 @@ This will run the AI model against test cases to verify it's working correctly.
 │           ├── eval.sh                       # Test runner
 │           ├── eval-prompts.yml             # Test cases
 │           ├── generate-sys-prompt.sh        # System prompt generator
-│           └── process-discussion.sh         # Discussion processing and commenting
+│           └── process-discussion.sh         # Discussion processing and minimizing
 ```
 
 ## Privacy and Security

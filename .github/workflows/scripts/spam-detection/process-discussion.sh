@@ -35,8 +35,9 @@ _discussion_number=$(echo "$_discussion_url" | grep -oP '/discussions/\K[0-9]+')
 _owner=$(echo "$_discussion_url" | sed -n 's|https://github.com/\([^/]*\)/.*|\1|p')
 _name=$(echo "$_discussion_url" | sed -n 's|https://github.com/[^/]*/\([^/]*\)/.*|\1|p')
 
-# First, get the discussion ID (node ID)
-_discussion_id=$(gh api graphql \
+# First, get the discussion body comment ID (node ID)
+# The first comment in a discussion is the discussion body itself
+_comment_id=$(gh api graphql \
   -F owner="$_owner" \
   -F name="$_name" \
   -F number="$_discussion_number" \
@@ -44,33 +45,26 @@ _discussion_id=$(gh api graphql \
     query($owner: String!, $name: String!, $number: Int!) {
       repository(owner: $owner, name: $name) {
         discussion(number: $number) {
+          body
           id
         }
       }
     }
   ' --jq '.data.repository.discussion.id')
 
-# Create the comment message
-_comment_body="Thank you for taking the time to create this discussion.
-
-We've automatically reviewed this discussion and suspect it as potentially inauthentic or spam-like content. As a result, we're marking this discussion.
-
-**If this was flagged by mistake**, please don't hesitate to reach out to the moderators or repository maintainers by commenting on this discussion with additional context.
-
-We appreciate your understanding and apologize if this action was taken in error. Our automated systems help us manage the large volume of discussions we receive, but we know they're not perfect."
-
-# Add a comment to the discussion
+# Minimize the discussion comment as spam
 gh api graphql \
-  -F discussionId="$_discussion_id" \
-  -F body="$_comment_body" \
+  -F subjectId="$_comment_id" \
+  -F classifier="SPAM" \
   -f query='
-    mutation($discussionId: ID!, $body: String!) {
-      addDiscussionComment(input: {discussionId: $discussionId, body: $body}) {
-        comment {
-          id
+    mutation($subjectId: ID!, $classifier: ReportedContentClassifiers!) {
+      minimizeComment(input: {subjectId: $subjectId, classifier: $classifier}) {
+        minimizedComment {
+          isMinimized
+          minimizedReason
         }
       }
     }
-  ' --silent || echo "Warning: Could not add comment to discussion"
+  ' --silent || echo "Warning: Could not minimize discussion"
 
-echo "discussion processed as suspected spam: commented and flagged"
+echo "discussion processed as suspected spam: minimized as spam"

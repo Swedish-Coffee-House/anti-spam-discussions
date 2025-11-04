@@ -25,7 +25,7 @@ Automated spam detection for GitHub Discussions using GitHub Models.
 # Check a specific discussion manually
 ./.github/workflows/scripts/spam-detection/check-discussion.sh <discussion-url>
 
-# Process a discussion (adds comment if spam)
+# Process a discussion (minimizes if spam)
 ./.github/workflows/scripts/spam-detection/process-discussion.sh <discussion-url>
 ```
 
@@ -42,10 +42,10 @@ vim .github/workflows/scripts/spam-detection/check-discussion-prompts.yml
 # Change: model: openai/gpt-4o-mini
 ```
 
-**Modify comment message:**
+**Change spam classifier:**
 ```bash
 vim .github/workflows/scripts/spam-detection/process-discussion.sh
-# Edit the _comment_body variable
+# Change: -F classifier="SPAM" to OUTDATED, OFF_TOPIC, etc.
 ```
 
 ## Workflow Trigger
@@ -61,7 +61,7 @@ on:
 ```yaml
 permissions:
   contents: read      # To checkout repository
-  discussions: write  # To comment on discussions
+  discussions: write  # To minimize discussions
   models: read        # To use GitHub Models API
 ```
 
@@ -71,7 +71,7 @@ permissions:
 2. **Fetch discussion** → Title and body extracted via GraphQL
 3. **AI analysis** → Content evaluated against spam criteria
 4. **Result: PASS** → Discussion allowed (no action)
-5. **Result: FAIL** → Comment added to discussion
+5. **Result: FAIL** → Discussion minimized (hidden) and marked as spam
 
 ## Spam Indicators
 

@@ -17,7 +17,7 @@ This repository provides automated spam detection for GitHub Discussions. Once s
 The workflow is already set up! It will automatically:
 - Monitor new discussions
 - Analyze them using AI
-- Flag suspicious content with a comment
+- Minimize (hide) suspicious content marked as spam
 
 ### For Your Own Repository
 
@@ -52,7 +52,7 @@ To use this in your own repository:
 1. **Trigger**: A new discussion is created
 2. **Analysis**: The workflow fetches the discussion title and body
 3. **AI Evaluation**: Content is analyzed using GPT-4o-mini
-4. **Action**: If spam is detected, a comment is added to the discussion
+4. **Action**: If spam is detected, the discussion is minimized (hidden) and marked as spam
 
 ### What Gets Detected
 
@@ -88,21 +88,22 @@ name: Detect spam
 model: openai/gpt-4o-mini  # Change to another available model
 ```
 
-### Modify the Comment Message
+### Change the Spam Classifier
 
-Edit `.github/workflows/scripts/spam-detection/process-discussion.sh` around line 53:
+Edit `.github/workflows/scripts/spam-detection/process-discussion.sh` to change how spam is marked:
 
 ```bash
-_comment_body="Your custom message here..."
+# Available classifiers: SPAM, OUTDATED, OFF_TOPIC, RESOLVED, DUPLICATE, ABUSE
+-F classifier="SPAM"  # Change to another classifier if needed
 ```
 
 ### Take Additional Actions
 
 You can extend `process-discussion.sh` to:
-- Close the discussion automatically
-- Add labels (if available for discussions in the future)
+- Use different classifiers (OUTDATED, OFF_TOPIC, etc.)
 - Send notifications to moderators
 - Log to external systems
+- Add additional checks before minimizing
 
 ## Testing
 
@@ -173,18 +174,18 @@ If you see errors about GitHub Models:
 
 ### Review Flagged Discussions
 
-1. Discussions flagged as spam will have a comment
-2. Review the comment and discussion content
+1. Discussions flagged as spam will be minimized (hidden)
+2. Review the minimized discussion content
 3. If it's a false positive:
-   - Remove the automated comment
+   - Un-minimize the discussion in GitHub's UI
    - Consider adjusting the detection criteria
 
 ## Best Practices
 
-1. **Monitor Initially**: When first deployed, check flagged discussions frequently
+1. **Monitor Initially**: When first deployed, check minimized discussions frequently
 2. **Tune Gradually**: Adjust criteria based on your community's patterns
-3. **Be Transparent**: The comment message explains the automated nature
-4. **Human Review**: Always have moderators review flagged content
+3. **Be Transparent**: Consider adding a pinned discussion explaining automated moderation
+4. **Human Review**: Always have moderators review minimized content
 5. **Iterate**: Update test cases and criteria as spam patterns evolve
 
 ## Advanced Usage
@@ -210,7 +211,7 @@ The workflow can be extended to integrate with:
 Modify `process-discussion.sh` to take different actions:
 
 ```bash
-# Example: Send to moderation queue instead of commenting
+# Example: Send to moderation queue instead of minimizing
 # (This is pseudocode - implement as needed)
 if [[ "$_result" == "FAIL" ]]; then
     send_to_moderation_queue "$_discussion_url"
