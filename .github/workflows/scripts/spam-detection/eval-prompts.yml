@@ -1,0 +1,140 @@
+name: Evaluate spam detection
+model: openai/gpt-4o-mini
+messages:
+  - role: system
+    content: "" # Since it's not a fix value, it should be generated and replaced at runtime
+  - role: user
+    content: "{{input}}" # This will be replaced by `gh models eval` from `testData` below
+evaluators:
+  - name: assert response
+    string:
+      equals: "{{expected}}"
+testData:
+  - name: spam, two words
+    expected: FAIL
+    input: |
+      <TITLE>
+      Quick Question
+      </TITLE>
+
+      <BODY>
+      Account
+      </BODY>
+  - name: spam, a hyperlink only
+    expected: FAIL
+    input: |
+      <TITLE>
+      Check this out
+      </TITLE>
+
+      <BODY>
+      [File-2025-07-04.pdf](https://github.com/user-attachments/files/12345678/File-2025-07-04.pdf)
+      </BODY>
+  - name: spam, empty body
+    expected: FAIL
+    input: |
+      <TITLE>
+      Help needed
+      </TITLE>
+
+      <BODY>
+      </BODY>
+  - name: spam, gibberish
+    expected: FAIL
+    input: |
+      <TITLE>
+      asdfgh
+      </TITLE>
+
+      <BODY>
+      qwerty zxcvbn asdfghjkl
+      </BODY>
+  - name: spam, single word
+    expected: FAIL
+    input: |
+      <TITLE>
+      Important
+      </TITLE>
+
+      <BODY>
+      Help
+      </BODY>
+  - name: not spam, valid question
+    expected: PASS
+    input: |
+      <TITLE>
+      How to configure authentication for this project?
+      </TITLE>
+
+      <BODY>
+      I'm trying to set up authentication for my application using this library, but I'm running into issues with the OAuth flow. Has anyone successfully implemented this? Here's what I've tried so far:
+
+      1. Set up the OAuth app in GitHub
+      2. Configured the callback URL
+      3. Added the client ID and secret to my environment variables
+
+      But I'm getting a 401 error when trying to authenticate. Any suggestions?
+      </BODY>
+  - name: not spam, feature request
+    expected: PASS
+    input: |
+      <TITLE>
+      Feature Request: Add support for custom themes
+      </TITLE>
+
+      <BODY>
+      It would be great if this project supported custom themes. Many users prefer dark mode or have specific color preferences. 
+
+      Proposed implementation:
+      - Add a theme configuration file
+      - Support CSS variables for customization
+      - Include a few built-in themes (light, dark, high contrast)
+
+      This would greatly improve accessibility and user experience.
+      </BODY>
+  - name: not spam, bug report
+    expected: PASS
+    input: |
+      <TITLE>
+      Application crashes when processing large files
+      </TITLE>
+
+      <BODY>
+      ### Description
+      The application crashes with an out-of-memory error when processing files larger than 500MB.
+
+      ### Steps to Reproduce
+      1. Open the application
+      2. Try to load a file larger than 500MB
+      3. Observe the crash
+
+      ### Expected Behavior
+      The application should handle large files gracefully, possibly with streaming or chunked processing.
+
+      ### Actual Behavior
+      Application crashes with: `java.lang.OutOfMemoryError: Java heap space`
+
+      ### Environment
+      - OS: Ubuntu 22.04
+      - Java Version: 17
+      - Application Version: 2.3.1
+      </BODY>
+  - name: not spam, community discussion
+    expected: PASS
+    input: |
+      <TITLE>
+      Best practices for testing in this framework?
+      </TITLE>
+
+      <BODY>
+      I've been using this framework for a few months now and I'm curious about what testing strategies the community recommends.
+
+      Currently, I'm using:
+      - Unit tests for individual components
+      - Integration tests for API endpoints
+      - End-to-end tests for critical user flows
+
+      What are others doing? Are there any testing tools or patterns that work particularly well with this framework?
+
+      I'd love to hear your experiences and recommendations!
+      </BODY>

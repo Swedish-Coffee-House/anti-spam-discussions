@@ -1,0 +1,34 @@
+name: Spam Discussion Detection
+on:
+  discussion:
+    types: [created]
+
+permissions:
+  contents: read
+  discussions: write
+  models: read
+
+jobs:
+  discussion-spam:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Run spam detection
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCUSSION_URL: ${{ github.event.discussion.html_url }}
+        run: |
+          ./.github/workflows/scripts/spam-detection/process-discussion.sh \
+            "$DISCUSSION_URL"
+          if [[ $? -ne 0 ]]; then
+            echo "error processing discussion"
+            exit 1
+          fi
