@@ -19,7 +19,7 @@ This repository provides an automated spam detection system for GitHub Discussio
 When a new discussion is created in your repository:
 
 1. The GitHub Actions workflow is triggered
-2. The discussion title and body are extracted
+2. The discussion title, body, and any comments are extracted
 3. An AI model analyzes the content using predefined spam indicators
 4. If spam is detected, the discussion is minimized (hidden) and marked as spam
 5. Repository maintainers can review minimized discussions and un-minimize if needed

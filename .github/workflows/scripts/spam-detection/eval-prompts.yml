@@ -138,3 +138,54 @@ testData:
 
       I'd love to hear your experiences and recommendations!
       </BODY>
+  - name: spam with spam comment
+    expected: FAIL
+    input: |
+      <TITLE>
+      How to install?
+      </TITLE>
+
+      <BODY>
+      Need help with installation
+      </BODY>
+
+      <COMMENTS>
+      Author: spammer123
+      Buy cheap products at example.com! 50% discount! Click here now!!!
+      ---
+      Author: legituser
+      Have you tried following the README installation guide?
+      </COMMENTS>
+  - name: legitimate discussion with helpful comments
+    expected: PASS
+    input: |
+      <TITLE>
+      Question about configuration
+      </TITLE>
+
+      <BODY>
+      I'm having trouble configuring the authentication settings. The docs mention using OAuth but I'm not sure how to set up the callback URL.
+      </BODY>
+
+      <COMMENTS>
+      Author: maintainer
+      You need to set the callback URL in your OAuth app settings to match your deployment URL. For local development, use http://localhost:3000/callback
+      ---
+      Author: user123
+      Thanks! That worked perfectly.
+      </COMMENTS>
+  - name: spam comment on legitimate discussion
+    expected: FAIL
+    input: |
+      <TITLE>
+      Feature request: Dark mode support
+      </TITLE>
+
+      <BODY>
+      It would be great to have dark mode support for this application. Many users prefer dark themes.
+      </BODY>
+
+      <COMMENTS>
+      Author: spambot99
+      🔥🔥🔥 AMAZING CRYPTO OPPORTUNITY!!! 💰💰💰 Join now at scam-site.com
+      </COMMENTS>

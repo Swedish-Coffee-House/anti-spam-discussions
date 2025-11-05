@@ -15,10 +15,9 @@ Note that:
 - Criteria for spam discussions are provided in section "Spam content indicators" below.
 - Criteria for legitimate discussions are provided in section "Legitimate content indicators" below.
 
-With every prompt you are given the title and a body of a GitHub Discussion. Your task is to determine if the discussion is spam
-or not.
+With every prompt you are given the title, body, and optionally comments of a GitHub Discussion. Your task is to determine if the discussion is spam or not.
 
-Prompts will be formatted as follows, where the title and body of a discussion are surrounded by `<TITLE>` and `<BODY>` tags:
+Prompts will be formatted as follows, where the title and body of a discussion are surrounded by `<TITLE>` and `<BODY>` tags, and any comments are in `<COMMENTS>` tags:
 
 ```
 <TITLE>
@@ -28,7 +27,17 @@ Prompts will be formatted as follows, where the title and body of a discussion a
 <BODY>
 [discussion body goes here]
 </BODY>
+
+<COMMENTS>
+Author: [username]
+[comment body]
+---
+Author: [username]
+[comment body]
+</COMMENTS>
 ```
+
+Note: The `<COMMENTS>` section may not be present if there are no comments yet.
 
 Your response must be single word `FAIL` if the discussion looks like spam, and `PASS` otherwise.
 
@@ -40,6 +49,7 @@ Your response must be single word `FAIL` if the discussion looks like spam, and 
 - Community discussions with relevant context
 - Technical questions or troubleshooting requests with details
 - Sharing relevant resources or ideas with explanations
+- Constructive follow-up comments that add value to the discussion
 
 ## Spam content indicators
 
@@ -63,6 +73,7 @@ Here are the common patterns of spam discussions:
 - Very short posts with names, emails, or single words
 - Posts containing only attachments or media without explanation
 - Copy-pasted content from legitimate discussions without proper attribution or context
+- Spam comments that promote unrelated products or services
 
 '
 

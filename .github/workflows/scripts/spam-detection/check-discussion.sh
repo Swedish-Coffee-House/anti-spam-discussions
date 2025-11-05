@@ -27,7 +27,7 @@ _discussion_number=$(echo "$_discussion_url" | grep -oP '/discussions/\K[0-9]+')
 _owner=$(echo "$_discussion_url" | sed -n 's|https://github.com/\([^/]*\)/.*|\1|p')
 _name=$(echo "$_discussion_url" | sed -n 's|https://github.com/[^/]*/\([^/]*\)/.*|\1|p')
 
-# Fetch discussion data using GraphQL
+# Fetch discussion data including comments using GraphQL
 _user_prompt=$(gh api graphql \
   -F owner="$_owner" \
   -F name="$_name" \
@@ -38,10 +38,26 @@ _user_prompt=$(gh api graphql \
         discussion(number: $number) {
           title
           body
+          comments(first: 100) {
+            nodes {
+              body
+              author {
+                login
+              }
+            }
+          }
         }
       }
     }
-  ' --jq '.data.repository.discussion | "<TITLE>\n\(.title)\n</TITLE>\n\n<BODY>\n\(.body // "")\n</BODY>"')
+  ' --jq '
+    .data.repository.discussion as $d |
+    "<TITLE>\n" + $d.title + "\n</TITLE>\n\n<BODY>\n" + ($d.body // "") + "\n</BODY>" +
+    (if ($d.comments.nodes | length) > 0 then
+      "\n\n<COMMENTS>\n" +
+      ([$d.comments.nodes[] | "Author: " + .author.login + "\n" + .body] | join("\n---\n")) +
+      "\n</COMMENTS>"
+    else "" end)
+  ')
 
 # Generate dynamic prompts for inference
 _system_prompt="$($SPAM_DIR/generate-sys-prompt.sh)"

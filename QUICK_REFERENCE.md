@@ -68,7 +68,7 @@ permissions:
 ## How It Works
 
 1. **New discussion created** → Workflow triggers
-2. **Fetch discussion** → Title and body extracted via GraphQL
+2. **Fetch discussion** → Title, body, and comments extracted via GraphQL
 3. **AI analysis** → Content evaluated against spam criteria
 4. **Result: PASS** → Discussion allowed (no action)
 5. **Result: FAIL** → Discussion minimized (hidden) and marked as spam

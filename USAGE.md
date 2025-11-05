@@ -50,7 +50,7 @@ To use this in your own repository:
 ### Detection Process
 
 1. **Trigger**: A new discussion is created
-2. **Analysis**: The workflow fetches the discussion title and body
+2. **Analysis**: The workflow fetches the discussion title, body, and any comments
 3. **AI Evaluation**: Content is analyzed using GPT-4o-mini
 4. **Action**: If spam is detected, the discussion is minimized (hidden) and marked as spam
 
