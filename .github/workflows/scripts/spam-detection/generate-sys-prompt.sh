@@ -39,7 +39,6 @@ Your response must be single word `FAIL` if the comment looks like spam, and `PA
 
 Here are the common patterns of spam comments:
 
-- Unrelated body and title that do not provide any useful information
 - An empty comment body
 - A comment body that contains only a single word or a few words without context
 - A meaningless comment body that does not provide any useful information
@@ -50,7 +49,11 @@ Here are the common patterns of spam comments:
 - Promotional content, advertisements, or unrelated marketing material
 - Content in languages that seem inappropriate for the project context
 - Comments that don'\''t relate to the project'\''s purpose (e.g. personal messages, off-topic content)
-- Comment is only a quote block without any additional user provided content outside of the quote block.
+- **Comments that consist solely of quoted text (using `>` markdown blockquote syntax) without any original commentary, response, or context added by the commenter.** This includes:
+  - Comments that are 100% quote blocks with no additional text
+  - Comments that quote another comment or external source verbatim without adding their own thoughts
+  - Comments that use blockquote syntax to copy/paste content without contributing anything new
+  - Note: A legitimate comment may quote a portion of text and then provide a response, question, or additional context - this is acceptable. Only flag as spam if there is NO original content outside the quote.
 - Low-effort posts with no meaningful contribution to the community
 - Template-like content that has not been filled in properly
 - Gibberish or nonsensical text

@@ -120,3 +120,39 @@ testData:
       <COMMENT>
       🔥🔥🔥 AMAZING CRYPTO OPPORTUNITY!!! 💰💰💰 Join now at scam-site.com
       </COMMENT>
+  - name: spam, only quoted text
+    expected: FAIL
+    input: |
+      <COMMENT>
+      > This is a great feature request. I think it would be helpful to have dark mode support.
+      </COMMENT>
+  - name: spam, multiple quote blocks only
+    expected: FAIL
+    input: |
+      <COMMENT>
+      > How do I install this?
+      > 
+      > I'm having trouble with the setup process.
+      </COMMENT>
+  - name: spam, quoted without context
+    expected: FAIL
+    input: |
+      <COMMENT>
+      > The application crashes when processing large files larger than 500MB.
+      </COMMENT>
+  - name: not spam, quote with response
+    expected: PASS
+    input: |
+      <COMMENT>
+      > How do I configure authentication?
+
+      You can configure it by setting the OAUTH_CLIENT_ID and OAUTH_SECRET environment variables. Check the docs for more details.
+      </COMMENT>
+  - name: not spam, quote with question
+    expected: PASS
+    input: |
+      <COMMENT>
+      > We should add dark mode support
+
+      I agree! Would this be configurable or automatic based on system preferences?
+      </COMMENT>
