@@ -27,46 +27,16 @@ _discussion_number=$(echo "$_discussion_url" | grep -oP '/discussions/\K[0-9]+')
 _owner=$(echo "$_discussion_url" | sed -n 's|https://github.com/\([^/]*\)/.*|\1|p')
 _name=$(echo "$_discussion_url" | sed -n 's|https://github.com/[^/]*/\([^/]*\)/.*|\1|p')
 
-# Get comment data from parameters if provided
+# Get comment data from parameters
 _comment_node_id="$2"
 _comment_body="$3"
 
-# If comment data is provided directly, use it
-if [[ -n "$_comment_node_id" && -n "$_comment_body" ]]; then
-    _user_prompt="<COMMENT>\n${_comment_body}\n</COMMENT>"
-else
-    # Fallback: Fetch discussion data including comments using GraphQL
-    _user_prompt=$(gh api graphql \
-      -F owner="$_owner" \
-      -F name="$_name" \
-      -F number="$_discussion_number" \
-      -f query='
-        query($owner: String!, $name: String!, $number: Int!) {
-          repository(owner: $owner, name: $name) {
-            discussion(number: $number) {
-              title
-              body
-              comments(first: 100) {
-                nodes {
-                  body
-                  author {
-                    login
-                  }
-                }
-              }
-            }
-          }
-        }
-      ' --jq '
-        .data.repository.discussion as $d |
-        "<TITLE>\n" + $d.title + "\n</TITLE>\n\n<BODY>\n" + ($d.body // "") + "\n</BODY>" +
-        (if ($d.comments.nodes | length) > 0 then
-          "\n\n<COMMENTS>\n" +
-          ([$d.comments.nodes[] | "Author: " + .author.login + "\n" + .body] | join("\n---\n")) +
-          "\n</COMMENTS>"
-        else "" end)
-      ')
+if [[ -z "$_comment_node_id" || -z "$_comment_body" ]]; then
+    echo "error: comment node ID and body are required" >&2
+    exit 1
 fi
+
+_user_prompt="<COMMENT>\n${_comment_body}\n</COMMENT>"
 
 # Generate dynamic prompts for inference
 _system_prompt="$($SPAM_DIR/generate-sys-prompt.sh)"

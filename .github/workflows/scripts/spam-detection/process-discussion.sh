@@ -31,38 +31,9 @@ fi
 
 echo "detected as spam: $_discussion_url"
 
-# Use the comment node ID if provided, otherwise fetch the discussion body ID
-if [[ -n "$_comment_node_id" ]]; then
-    _comment_id="$_comment_node_id"
-else
-    # Extract discussion number from URL
-    _discussion_number=$(echo "$_discussion_url" | grep -oP '/discussions/\K[0-9]+')
-
-    # Get repository owner and name from URL
-    _owner=$(echo "$_discussion_url" | sed -n 's|https://github.com/\([^/]*\)/.*|\1|p')
-    _name=$(echo "$_discussion_url" | sed -n 's|https://github.com/[^/]*/\([^/]*\)/.*|\1|p')
-
-    # First, get the discussion body comment ID (node ID)
-    # The first comment in a discussion is the discussion body itself
-    _comment_id=$(gh api graphql \
-      -F owner="$_owner" \
-      -F name="$_name" \
-      -F number="$_discussion_number" \
-      -f query='
-        query($owner: String!, $name: String!, $number: Int!) {
-          repository(owner: $owner, name: $name) {
-            discussion(number: $number) {
-              body
-              id
-            }
-          }
-        }
-      ' --jq '.data.repository.discussion.id')
-fi
-
-# Minimize the discussion comment as spam
+# Minimize the comment as spam
 gh api graphql \
-  -F subjectId="$_comment_id" \
+  -F subjectId="$_comment_node_id" \
   -F classifier="SPAM" \
   -f query='
     mutation($subjectId: ID!, $classifier: ReportedContentClassifiers!) {
@@ -73,6 +44,6 @@ gh api graphql \
         }
       }
     }
-  ' --silent || echo "Warning: Could not minimize discussion"
+  ' --silent || echo "Warning: Could not minimize comment"
 
 echo "comment processed as suspected spam: minimized as spam"
