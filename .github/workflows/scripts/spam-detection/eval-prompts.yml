@@ -13,60 +13,36 @@ testData:
   - name: spam, two words
     expected: FAIL
     input: |
-      <TITLE>
-      Quick Question
-      </TITLE>
-
-      <BODY>
+      <COMMENT>
       Account
-      </BODY>
+      </COMMENT>
   - name: spam, a hyperlink only
     expected: FAIL
     input: |
-      <TITLE>
-      Check this out
-      </TITLE>
-
-      <BODY>
+      <COMMENT>
       [File-2025-07-04.pdf](https://github.com/user-attachments/files/12345678/File-2025-07-04.pdf)
-      </BODY>
+      </COMMENT>
   - name: spam, empty body
     expected: FAIL
     input: |
-      <TITLE>
-      Help needed
-      </TITLE>
-
-      <BODY>
-      </BODY>
+      <COMMENT>
+      </COMMENT>
   - name: spam, gibberish
     expected: FAIL
     input: |
-      <TITLE>
-      asdfgh
-      </TITLE>
-
-      <BODY>
+      <COMMENT>
       qwerty zxcvbn asdfghjkl
-      </BODY>
+      </COMMENT>
   - name: spam, single word
     expected: FAIL
     input: |
-      <TITLE>
-      Important
-      </TITLE>
-
-      <BODY>
+      <COMMENT>
       Help
-      </BODY>
+      </COMMENT>
   - name: not spam, valid question
     expected: PASS
     input: |
-      <TITLE>
-      How to configure authentication for this project?
-      </TITLE>
-
-      <BODY>
+      <COMMENT>
       I'm trying to set up authentication for my application using this library, but I'm running into issues with the OAuth flow. Has anyone successfully implemented this? Here's what I've tried so far:
 
       1. Set up the OAuth app in GitHub
@@ -74,15 +50,11 @@ testData:
       3. Added the client ID and secret to my environment variables
 
       But I'm getting a 401 error when trying to authenticate. Any suggestions?
-      </BODY>
+      </COMMENT>
   - name: not spam, feature request
     expected: PASS
     input: |
-      <TITLE>
-      Feature Request: Add support for custom themes
-      </TITLE>
-
-      <BODY>
+      <COMMENT>
       It would be great if this project supported custom themes. Many users prefer dark mode or have specific color preferences. 
 
       Proposed implementation:
@@ -91,15 +63,11 @@ testData:
       - Include a few built-in themes (light, dark, high contrast)
 
       This would greatly improve accessibility and user experience.
-      </BODY>
+      </COMMENT>
   - name: not spam, bug report
     expected: PASS
     input: |
-      <TITLE>
-      Application crashes when processing large files
-      </TITLE>
-
-      <BODY>
+      <COMMENT>
       ### Description
       The application crashes with an out-of-memory error when processing files larger than 500MB.
 
@@ -118,15 +86,11 @@ testData:
       - OS: Ubuntu 22.04
       - Java Version: 17
       - Application Version: 2.3.1
-      </BODY>
+      </COMMENT>
   - name: not spam, community discussion
     expected: PASS
     input: |
-      <TITLE>
-      Best practices for testing in this framework?
-      </TITLE>
-
-      <BODY>
+      <COMMENT>
       I've been using this framework for a few months now and I'm curious about what testing strategies the community recommends.
 
       Currently, I'm using:
@@ -137,55 +101,22 @@ testData:
       What are others doing? Are there any testing tools or patterns that work particularly well with this framework?
 
       I'd love to hear your experiences and recommendations!
-      </BODY>
-  - name: spam with spam comment
+      </COMMENT>
+  - name: spam, promotional content
     expected: FAIL
     input: |
-      <TITLE>
-      How to install?
-      </TITLE>
-
-      <BODY>
-      Need help with installation
-      </BODY>
-
-      <COMMENTS>
-      Author: spammer123
+      <COMMENT>
       Buy cheap products at example.com! 50% discount! Click here now!!!
-      ---
-      Author: legituser
-      Have you tried following the README installation guide?
-      </COMMENTS>
-  - name: legitimate discussion with helpful comments
+      </COMMENT>
+  - name: not spam, helpful response
     expected: PASS
     input: |
-      <TITLE>
-      Question about configuration
-      </TITLE>
-
-      <BODY>
-      I'm having trouble configuring the authentication settings. The docs mention using OAuth but I'm not sure how to set up the callback URL.
-      </BODY>
-
-      <COMMENTS>
-      Author: maintainer
+      <COMMENT>
       You need to set the callback URL in your OAuth app settings to match your deployment URL. For local development, use http://localhost:3000/callback
-      ---
-      Author: user123
-      Thanks! That worked perfectly.
-      </COMMENTS>
-  - name: spam comment on legitimate discussion
+      </COMMENT>
+  - name: spam, crypto promotion
     expected: FAIL
     input: |
-      <TITLE>
-      Feature request: Dark mode support
-      </TITLE>
-
-      <BODY>
-      It would be great to have dark mode support for this application. Many users prefer dark themes.
-      </BODY>
-
-      <COMMENTS>
-      Author: spambot99
+      <COMMENT>
       🔥🔥🔥 AMAZING CRYPTO OPPORTUNITY!!! 💰💰💰 Join now at scam-site.com
-      </COMMENTS>
+      </COMMENT>

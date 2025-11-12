@@ -50,7 +50,7 @@ Here are the common patterns of spam comments:
 - Promotional content, advertisements, or unrelated marketing material
 - Content in languages that seem inappropriate for the project context
 - Comments that don'\''t relate to the project'\''s purpose (e.g. personal messages, off-topic content)
-- Content that seems to be taken from, or quoting, another comment without establishing a sensible context
+- Content is a quote block without adding content of its own
 - Low-effort posts with no meaningful contribution to the community
 - Template-like content that has not been filled in properly
 - Gibberish or nonsensical text
