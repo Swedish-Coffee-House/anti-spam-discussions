@@ -29,9 +29,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISCUSSION_URL: ${{ github.event.discussion.html_url }}
+          COMMENT_NODE_ID: ${{ github.event.comment.node_id }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
         run: |
           ./.github/workflows/scripts/spam-detection/process-discussion.sh \
-            "$DISCUSSION_URL"
+            "$DISCUSSION_URL" "$COMMENT_NODE_ID" "$COMMENT_BODY"
           if [[ $? -ne 0 ]]; then
             echo "error processing discussion"
             exit 1
